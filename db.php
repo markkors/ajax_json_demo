@@ -1,6 +1,7 @@
 <?php
 
-print_r($_POST);
+echo get_questions();
+
 
 function get_connection() {
 
@@ -22,7 +23,7 @@ function get_connection() {
 
 
 function get_questions() {
-    $data = null;
+    $data=null;
     $conn = get_connection();
     $sql = "SELECT * FROM `question`";
     $stmt = $conn->prepare($sql);
@@ -33,7 +34,8 @@ function get_questions() {
             array_push($data,$row);
         }
     }
-    return $data;
+
+    return json_encode($data);
 }
 
 

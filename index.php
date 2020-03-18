@@ -58,25 +58,22 @@ return $html;
 
 <script>
 
+get_questions();
 
-
-   document.addEventListener("DOMContentLoaded", function (e) {
-        get_questions();
-    });
-
-    function get_questions() {
-        let fd = new FormData();
-        fd.append("action","show");
-
-        let req = new XMLHttpRequest();
-        req.onreadystatechange = function () {
-            if(this.readyState==4 || this.readyState ==200) {
-                console.log(req.responseText);
-            };
-        };
-        req.open("POST","db.php",true);
-        req.send(fd);
+function get_questions() {
+    let req = new XMLHttpRequest();
+    req.onreadystatechange = function() {
+        if(req.readyState==4 || req.readyState==200) {
+            console.log(req.responseText);
+            let o = JSON.parse(req.responseText);
+            console.log(o);
+        }
     }
+    req.open("POST","db.php",true);
+    req.send();
+}
+
+
 
 
 </script>
@@ -86,6 +83,8 @@ return $html;
 <div class="datatable">
 
 </div>
+
+
 
 
 </body>

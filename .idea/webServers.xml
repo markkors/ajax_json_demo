@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c9809c9d-a283-4918-8dfb-865e1691b058" name="Diskstation" url="http://192.168.2.201/roc/videoles/ajax_json/">
+        <fileTransfer port="0" mountedRoot="W:\roc\videoles\ajax_json" accessType="MOUNT" />
+      </webServer>
+    </option>
+  </component>
+</project>
