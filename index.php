@@ -60,13 +60,33 @@ return $html;
 
 get_questions();
 
+function question() {
+    this.idQuestion = null;
+    this.Type = null;
+    this.Desc = null;
+}
+
+
 function get_questions() {
     let req = new XMLHttpRequest();
     req.onreadystatechange = function() {
         if(req.readyState==4 || req.readyState==200) {
-            console.log(req.responseText);
             let o = JSON.parse(req.responseText);
-            console.log(o);
+            let p = document.getElementById("questioncontainer");
+            o.forEach(function (e) {
+                let q = Object.assign(new question(),e);
+                let r = document.createElement("div");
+                r.className="datarow";
+                for(let prop in q) {
+                    let c = document.createElement("div");
+                    c.className = "dataitem";
+                    c.setAttribute("field",prop);
+                    c.innerText = q[prop];
+                    r.appendChild(c)
+                }
+                p.appendChild(r);
+            });
+
         }
     }
     req.open("POST","db.php",true);
