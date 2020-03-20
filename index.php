@@ -34,6 +34,7 @@ return $html;
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link href="font-awesome/css/all.css" type="text/css" rel="stylesheet">
 </head>
 
 <style>
@@ -54,6 +55,10 @@ return $html;
         vertical-align: bottom;
     }
 
+    .dataitem:nth-child(1) {
+        width: 10%;
+    }
+
 </style>
 
 <script>
@@ -72,19 +77,28 @@ function get_questions() {
     req.onreadystatechange = function() {
         if(req.readyState==4 || req.readyState==200) {
             let o = JSON.parse(req.responseText);
-            let p = document.getElementById("questioncontainer");
+            let qc  = document.getElementById("questioncontainer");
             o.forEach(function (e) {
                 let q = Object.assign(new question(),e);
                 let r = document.createElement("div");
                 r.className="datarow";
-                for(let prop in q) {
+
+                // voeg een trashcan toe
+                let edit = document.createElement("div");
+                edit.className="dataitem";
+                let tc = document.createElement("i")
+                tc.className = "fas fa-trash";
+                edit.appendChild(tc);
+                r.appendChild(edit);
+
+                for(prop in q) {
                     let c = document.createElement("div");
                     c.className = "dataitem";
                     c.setAttribute("field",prop);
                     c.innerText = q[prop];
-                    r.appendChild(c)
+                    r.appendChild(c);
                 }
-                p.appendChild(r);
+                qc.appendChild(r);
             });
 
         }
