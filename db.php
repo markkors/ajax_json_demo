@@ -1,6 +1,22 @@
 <?php
 
-echo get_questions();
+
+
+if (isset($_POST['action'])) {
+    $action = $_POST['action'];
+    switch ($action) {
+        case "delete":
+            $id=$_POST['id'];
+            delete_question($id);
+            //echo get_questions();
+            //var_dump($_POST);
+            break;
+    }
+} else {
+    echo get_questions();
+}
+
+
 
 
 function get_connection() {
@@ -39,3 +55,13 @@ function get_questions() {
 }
 
 
+function delete_question($id) {
+    $conn = get_connection();
+    $sql = "DELETE FROM `question` WHERE `idQuestion`=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s",$id);
+    if($stmt->execute()) {
+       return true;
+    }
+    return false;
+}

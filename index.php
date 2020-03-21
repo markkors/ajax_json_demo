@@ -35,6 +35,7 @@ return $html;
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="font-awesome/css/all.css" type="text/css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
 <style>
@@ -59,6 +60,10 @@ return $html;
         width: 10%;
     }
 
+    .dataitem:nth-child(1) i:hover
+    {
+        color:red;
+    }
 </style>
 
 <script>
@@ -72,12 +77,15 @@ function question() {
 }
 
 
+
+
 function get_questions() {
     let req = new XMLHttpRequest();
     req.onreadystatechange = function() {
         if(req.readyState==4 || req.readyState==200) {
             let o = JSON.parse(req.responseText);
             let qc  = document.getElementById("questioncontainer");
+            delete_children(qc);
             o.forEach(function (e) {
                 let q = Object.assign(new question(),e);
                 let r = document.createElement("div");
@@ -88,6 +96,31 @@ function get_questions() {
                 edit.className="dataitem";
                 let tc = document.createElement("i")
                 tc.className = "fas fa-trash";
+
+                tc.addEventListener("click",function (evt) {
+                    if(confirm('Dit wist de vraag, doorgaan?')) {
+                        let e = evt.currentTarget;
+                        e.setAttribute("q_id", q.idQuestion);
+                        let id = e.getAttribute("q_id");
+                        let fd = new FormData();
+                        fd.append("action", "delete");
+                        fd.append("id", id);
+                        $.ajax({
+                            url: "db.php",
+                            type: "POST",
+                            data: fd,
+                            processData: false,
+                            enctype: 'multipart/form-data',
+                            contentType: false,
+                            cache: false,
+                            success: function (result) {
+                                // get questions again
+                                get_questions();
+                            }
+                        });
+                    }
+                });
+
                 edit.appendChild(tc);
                 r.appendChild(edit);
 
@@ -107,7 +140,11 @@ function get_questions() {
     req.send();
 }
 
-
+function delete_children(parent) {
+    while(parent.hasChildNodes()) {
+        parent.removeChild(parent.firstChild);
+    }
+}
 
 
 </script>
