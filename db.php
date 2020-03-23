@@ -3,13 +3,12 @@
 
 
 if (isset($_POST['action'])) {
+    var_dump($_POST);
     $action = $_POST['action'];
     switch ($action) {
         case "delete":
             $id=$_POST['id'];
             delete_question($id);
-            //echo get_questions();
-            //var_dump($_POST);
             break;
     }
 } else {

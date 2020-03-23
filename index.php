@@ -114,6 +114,7 @@ function get_questions() {
                             contentType: false,
                             cache: false,
                             success: function (result) {
+                                console.log(result);
                                 // get questions again
                                 get_questions();
                             }
