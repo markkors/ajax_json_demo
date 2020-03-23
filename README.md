@@ -1,0 +1,1 @@
+In dit project worden de basis concepten van een CRUD systeem met basic AJAX methoden uitgelegd. 
