@@ -141,14 +141,16 @@ function get_questions() {
                     // wanneer op enter wordt gedruk ajax update naar db
                     input_ele.addEventListener("keypress", function(evt) {
                         let ele = evt.currentTarget;
-
+                        let new_value = ele.value;
                         if(evt.key==='Enter') {
+                            desc_ele.innerText=new_value;
+                            ele.remove();
                             // update nieuwe waarde met Ajax naar database
                             let url = "db.php";
                             let data = new FormData()
                                 data.append("id",q.idQuestion);
                                 data.append("action","update");
-                                data.append("desc",ele.value);
+                                data.append("desc",new_value);
                             let options = {
                                 method: 'POST',
                                 body: data,

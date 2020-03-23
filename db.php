@@ -4,7 +4,7 @@
 
 
 if (isset($_POST['action'])) {
-    var_dump($_POST);
+    //var_dump($_POST);
     $action = $_POST['action'];
     switch ($action) {
         case "delete":
