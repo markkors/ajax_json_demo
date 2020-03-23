@@ -64,6 +64,10 @@ return $html;
     {
         color:red;
     }
+
+    i {
+        margin-right: 5px;
+    }
 </style>
 
 <script>
@@ -83,6 +87,7 @@ function get_questions() {
     let req = new XMLHttpRequest();
     req.onreadystatechange = function() {
         if(req.readyState==4 || req.readyState==200) {
+            console.log(req.responseText);
             let o = JSON.parse(req.responseText);
             let qc  = document.getElementById("questioncontainer");
             delete_children(qc);
@@ -94,17 +99,18 @@ function get_questions() {
                 // voeg een trashcan toe
                 let edit = document.createElement("div");
                 edit.className="dataitem";
+                // maak een trashcan
                 let tc = document.createElement("i")
                 tc.className = "fas fa-trash";
-
+                // voeg een click event aan de trashcan toe,
                 tc.addEventListener("click",function (evt) {
                     if(confirm('Dit wist de vraag, doorgaan?')) {
-                        let e = evt.currentTarget;
-                        e.setAttribute("q_id", q.idQuestion);
-                        let id = e.getAttribute("q_id");
+                        //let e = evt.currentTarget;
+                        //e.setAttribute("q_id", q.idQuestion);
+                        //let id = e.getAttribute("q_id");
                         let fd = new FormData();
                         fd.append("action", "delete");
-                        fd.append("id", id);
+                        fd.append("id", q.idQuestion);
                         $.ajax({
                             url: "db.php",
                             type: "POST",
@@ -122,7 +128,52 @@ function get_questions() {
                     }
                 });
 
+                // maak een update element
+                let ue = document.createElement("i")
+                ue.className = "fas fa-edit";
+                // voeg click event toe aan update element
+                ue.addEventListener("click",function (evt) {
+                    let desc_ele = evt.currentTarget.parentElement.parentElement.lastChild;
+                    desc_ele.innerText = '';
+                    let input_ele = document.createElement("input");
+                    input_ele.name = q.idQuestion;
+                    input_ele.setAttribute("value",q.Desc);
+                    // wanneer op enter wordt gedruk ajax update naar db
+                    input_ele.addEventListener("keypress", function(evt) {
+                        let ele = evt.currentTarget;
+
+                        if(evt.key==='Enter') {
+                            // update nieuwe waarde met Ajax naar database
+                            let url = "db.php";
+                            let data = new FormData()
+                                data.append("id",q.idQuestion);
+                                data.append("action","update");
+                                data.append("desc",ele.value);
+                            let options = {
+                                method: 'POST',
+                                body: data,
+                            };
+                            // ajax with fetch (only in ES6)
+                            fetch(url,options)
+                                .then(function(response) {
+                                        return response.text();
+                                }).then(function(body) {
+                                    console.log(body);
+                                    // get questions again
+                                    get_questions();
+                                });
+                        }
+                    });
+
+                    desc_ele.appendChild(input_ele);
+                });
+
+
+
+                // voeg de icons toe aan de edit container
                 edit.appendChild(tc);
+                edit.appendChild(ue);
+
                 r.appendChild(edit);
 
                 for(prop in q) {

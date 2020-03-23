@@ -2,6 +2,7 @@
 
 
 
+
 if (isset($_POST['action'])) {
     var_dump($_POST);
     $action = $_POST['action'];
@@ -9,6 +10,11 @@ if (isset($_POST['action'])) {
         case "delete":
             $id=$_POST['id'];
             delete_question($id);
+            break;
+        case "update":
+            $id=$_POST['id'];
+            $desc = $_POST['desc'];
+            update_question($id,$desc);
             break;
     }
 } else {
@@ -61,6 +67,18 @@ function delete_question($id) {
     $stmt->bind_param("s",$id);
     if($stmt->execute()) {
        return true;
+    }
+    return false;
+}
+
+function update_question($id,$desc) {
+    $conn = get_connection();
+    $sql = "UPDATE `question` SET `Desc` = ? WHERE `idQuestion` = ?";
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bind_param("ss",htmlspecialchars($desc),$id);
+    if($stmt->execute()) {
+        return true;
     }
     return false;
 }
