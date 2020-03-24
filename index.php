@@ -232,6 +232,7 @@ function add_question_row(parent) {
             // wanneer op enter wordt gedrukt dan moet vraag worden toegevoegd
             inp.addEventListener("keypress",function (evt) {
                 if(evt.key==='Enter') {
+                    inp.setAttribute("disabled","");
                     // update nieuwe waarde met Ajax naar database
                     let url = "db.php";
                     let data = new FormData()
