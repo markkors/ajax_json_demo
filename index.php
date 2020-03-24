@@ -49,6 +49,10 @@ return $html;
         height: 50px;
     }
 
+    .datarow:nth-last-child(1) i {
+        padding-top: 5px;
+    }
+
     .dataitem {
         display: table-cell;
         width: 33%;
@@ -185,13 +189,70 @@ function get_questions() {
                     c.innerText = q[prop];
                     r.appendChild(c);
                 }
+                // voeg vraag toe aan question container
                 qc.appendChild(r);
             });
-
+            // wanneer laatste vraag is toegevoegd, nog een extra rij toevoegen om een nieuwe vraag te maken
+            add_question_row(qc);
         }
+
     }
     req.open("POST","db.php",true);
     req.send();
+}
+
+function add_question_row(parent) {
+    let row = document.createElement("div");
+    row.className="datarow"
+    // maak een update element
+    let add = document.createElement("div");
+    add.className="dataitem";
+
+    let ae = document.createElement("i")
+    ae.className = "fas fa-plus-square";
+    ae.addEventListener("click",function (evt) {
+        alert('type new record in input element and hit enter');
+    });
+    add.appendChild(ae);
+    row.appendChild(add);
+
+    let q = new question();
+    for(prop in q) {
+        let c = document.createElement("div");
+        c.className = "dataitem";
+        c.setAttribute("field",prop);
+        if(prop==='Desc') {
+            let inp = document.createElement("input");
+            inp.name = prop;
+            inp.setAttribute("value","");
+            inp.addEventListener("keypress",function (evt) {
+                if(evt.key==='Enter') {
+                    // update nieuwe waarde met Ajax naar database
+                    let url = "db.php";
+                    let data = new FormData()
+                    data.append("action","add");
+                    data.append("desc",inp.value);
+                    let options = {
+                        method: 'POST',
+                        body: data,
+                    };
+                    // ajax with fetch (only in ES6)
+                    fetch(url,options)
+                        .then(function(response) {
+                            return response.text();
+                        }).then(function(body) {
+                        //console.log(body);
+                        // get questions again
+                        get_questions();
+                    });
+                }
+            });
+            c.appendChild(inp);
+        }
+        row.appendChild(c);
+    }
+
+    parent.appendChild(row);
 }
 
 function delete_children(parent) {

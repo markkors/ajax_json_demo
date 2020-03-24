@@ -16,6 +16,12 @@ if (isset($_POST['action'])) {
             $desc = $_POST['desc'];
             update_question($id,$desc);
             break;
+        case "add";
+            $desc = $_POST['desc'];
+            if(!add_question($desc)) echo "er ging iets fout in de SQL";
+
+            break;
+
     }
 } else {
     echo get_questions();
@@ -80,5 +86,18 @@ function update_question($id,$desc) {
     if($stmt->execute()) {
         return true;
     }
+    return false;
+}
+
+function add_question($desc) {
+    $conn = get_connection();
+    $sql = "INSERT INTO `question` (`Type`,`Desc`) VALUES (1,?)";
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bind_param("s",htmlspecialchars($desc));
+    if($stmt->execute()) {
+        return true;
+    }
+    //echo $conn->error;
     return false;
 }
