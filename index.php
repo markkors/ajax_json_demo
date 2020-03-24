@@ -201,6 +201,10 @@ function get_questions() {
     req.send();
 }
 
+
+/*
+Functie welke een laatste rij toevoegd met daarin add mogelijkheden voor een nieuwe vraag
+ */
 function add_question_row(parent) {
     let row = document.createElement("div");
     row.className="datarow"
@@ -216,7 +220,7 @@ function add_question_row(parent) {
     add.appendChild(ae);
     row.appendChild(add);
 
-    let q = new question();
+    let q = new question();  // even een nieuwe (lege) vraag om aantal kolommen te bepalen
     for(prop in q) {
         let c = document.createElement("div");
         c.className = "dataitem";
@@ -225,6 +229,7 @@ function add_question_row(parent) {
             let inp = document.createElement("input");
             inp.name = prop;
             inp.setAttribute("value","");
+            // wanneer op enter wordt gedrukt dan moet vraag worden toegevoegd
             inp.addEventListener("keypress",function (evt) {
                 if(evt.key==='Enter') {
                     // update nieuwe waarde met Ajax naar database
@@ -251,6 +256,7 @@ function add_question_row(parent) {
         }
         row.appendChild(c);
     }
+
 
     parent.appendChild(row);
 }
